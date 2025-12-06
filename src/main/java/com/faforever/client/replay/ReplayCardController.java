@@ -24,6 +24,7 @@ import com.faforever.client.theme.UiService;
 import com.faforever.client.util.TimeService;
 import com.faforever.client.vault.VaultEntityCardController;
 import com.faforever.client.vault.review.StarsController;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -37,6 +38,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,6 +89,7 @@ public class ReplayCardController extends VaultEntityCardController<Replay> {
   public HBox teamsContainer;
   public Label onMapLabel;
   public Button watchButton;
+  public Button watchLaterButton;
   public Button deleteButton;
   public TextField replayIdField;
   public StarsController starsController;
@@ -157,6 +160,22 @@ public class ReplayCardController extends VaultEntityCardController<Replay> {
       }
     });
 
+    ObservableValue<Boolean> isWatchLater = entity.flatMap(replay -> Bindings.createBooleanBinding(
+        () -> replayHistory.getWatchLaterReplays().contains(replay.id()), replayHistory.getWatchLaterReplays())
+    ).when(showing);
+
+    watchLaterButton.graphicProperty().bind(isWatchLater.map(watchLater -> {
+      if (watchLater) {
+        Region region = new Region();
+        region.getStyleClass().addAll("icon", "time-filled-icon");
+        return region;
+      } else {
+        Region region = new Region();
+        region.getStyleClass().addAll("icon", "time-icon");
+        return region;
+      }
+    }));
+
     teams.bind(entity.map(Replay::teamPlayerStats).when(showing));
     teams.orElse(java.util.Map.of()).addListener(teamsListener);
   }
@@ -217,6 +236,15 @@ public class ReplayCardController extends VaultEntityCardController<Replay> {
 
   public void onWatchButtonClicked() {
     replayService.runReplay(entity.get());
+  }
+
+  public void onWatchLaterButtonClicked() {
+    Integer replayId = entity.get().id();
+    if (replayHistory.getWatchLaterReplays().contains(replayId)) {
+      replayHistory.getWatchLaterReplays().remove(replayId);
+    } else {
+      replayHistory.getWatchLaterReplays().add(replayId);
+    }
   }
 
   public void onDeleteButtonClicked() {

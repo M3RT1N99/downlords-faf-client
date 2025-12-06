@@ -202,7 +202,7 @@ public class GameRunnerTest extends ServiceTest {
     lenient().when(iceAdapter.start(anyInt(), anyBoolean())).thenReturn(completedFuture(GPG_PORT));
     lenient().when(coturnService.getIceSession(anyInt()))
              .thenReturn(Mono.just(new IceSession("someSessionId", false, List.of())));
-    lenient().when(taskService.submitFutureTask(anyString(), simpleTaskCaptor.capture())).thenAnswer(_ -> {
+    lenient().when(taskService.submitFutureTask(anyString(), simpleTaskCaptor.capture())).thenAnswer(invocation -> {
       CompletableFuture<Object> task = simpleTaskCaptor.getValue().get();
       task.join();
       return task;

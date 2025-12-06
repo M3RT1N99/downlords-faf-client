@@ -47,6 +47,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -470,6 +471,19 @@ public class ReplayService {
   @Cacheable(value = CacheNames.REPLAYS_MINE, sync = true)
   public Mono<Tuple2<List<Replay>, Integer>> getOwnReplaysWithPageCount(int count, int page) {
     return getReplaysForPlayerWithPageCount(loginService.getUserId(), count, page).cache();
+  }
+
+  public Mono<Tuple2<List<Replay>, Integer>> getWatchLaterReplaysWithPageCount(int count, int page) {
+    Collection<Integer> watchLaterIds = replayHistory.getWatchLaterReplays();
+    if (watchLaterIds.isEmpty()) {
+      return Mono.just(Tuples.of(List.of(), 0));
+    }
+    ElideNavigatorOnCollection<Game> navigator = ElideNavigator.of(Game.class)
+                                                               .collection()
+                                                               .setFilter(qBuilder().intNum("id")
+                                                                                    .in(watchLaterIds))
+                                                               .addSortingRule("endTime", false);
+    return getReplayPage(navigator, count, page);
   }
 
   private Mono<Tuple2<List<Replay>, Integer>> getReplayPage(ElideNavigatorOnCollection<Game> navigator, int count,

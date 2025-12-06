@@ -97,6 +97,7 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
       case NEWEST -> currentSupplier = replayService.getNewestReplaysWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
       case HIGHEST_RATED -> currentSupplier = replayService.getHighestRatedReplaysWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
       case PLAYER -> currentSupplier = replayService.getReplaysForPlayerWithPageCount(playerId, pageSize, pagination.getCurrentPageIndex() + 1);
+      case WATCH_LATER -> currentSupplier = replayService.getWatchLaterReplaysWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
     }
   }
 
@@ -116,7 +117,9 @@ public class OnlineReplayVaultController extends VaultEntityController<Replay> {
                                SearchType.NEWEST,
                                "vault.replays.newest"),
         new ShowRoomCategory<>(() -> replayService.getHighestRatedReplaysWithPageCount(TOP_ELEMENT_COUNT, 1),
-                               SearchType.HIGHEST_RATED, "vault.replays.highestRated")
+                               SearchType.HIGHEST_RATED, "vault.replays.highestRated"),
+        new ShowRoomCategory<>(() -> replayService.getWatchLaterReplaysWithPageCount(TOP_ELEMENT_COUNT, 1),
+                               SearchType.WATCH_LATER, "vault.replays.watchLater")
     );
   }
 

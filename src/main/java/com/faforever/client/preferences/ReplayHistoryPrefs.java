@@ -9,6 +9,8 @@ public class ReplayHistoryPrefs {
 
   private final SetProperty<Integer> watchedReplays = new SimpleSetProperty<>(
       FXCollections.observableSet());
+  private final SetProperty<Integer> watchLaterReplays = new SimpleSetProperty<>(
+      FXCollections.observableSet());
 
   public ObservableSet<Integer> getWatchedReplays() {return watchedReplays.getValue();}
 
@@ -17,5 +19,13 @@ public class ReplayHistoryPrefs {
   }
 
   public SetProperty<Integer> watchedReplaysProperty() {return watchedReplays;}
+
+  public ObservableSet<Integer> getWatchLaterReplays() {return watchLaterReplays.getValue();}
+
+  public void setWatchLaterReplays(ObservableSet<Integer> watchLaterReplays) {
+    this.watchLaterReplays.setValue(watchLaterReplays);
+  }
+
+  public SetProperty<Integer> watchLaterReplaysProperty() {return watchLaterReplays;}
 
 }

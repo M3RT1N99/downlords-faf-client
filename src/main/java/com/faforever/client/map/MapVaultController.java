@@ -145,7 +145,7 @@ public class MapVaultController extends VaultEntityController<MapVersion> {
       case HIGHEST_RATED -> mapService.getHighestRatedMapsWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
       case PLAYED -> mapService.getMostPlayedMapsWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
       case OWN -> mapService.getOwnedMapsWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
-      case PLAYER, HIGHEST_RATED_UI -> throw new UnsupportedOperationException();
+      case PLAYER, HIGHEST_RATED_UI, WATCH_LATER -> throw new UnsupportedOperationException();
     };
   }
 

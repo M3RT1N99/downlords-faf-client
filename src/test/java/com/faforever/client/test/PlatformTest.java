@@ -62,7 +62,7 @@ public abstract class PlatformTest {
   public static void setupPlatform() {
     try {
       Platform.startup(() -> {});
-    } catch (IllegalStateException _) {
+    } catch (IllegalStateException ignored) {
     }
   }
 

@@ -93,6 +93,7 @@ public class ModVaultController extends VaultEntityController<ModVersion> {
           currentSupplier = modService.getHighestRatedUiModsWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
       case RECOMMENDED ->
           currentSupplier = modService.getRecommendedModsWithPageCount(pageSize, pagination.getCurrentPageIndex() + 1);
+      default -> throw new UnsupportedOperationException();
     }
   }
 

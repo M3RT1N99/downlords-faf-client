@@ -104,6 +104,12 @@
                 <Region styleClass="icon,uninstall-icon"/>
             </graphic>
         </Button>
+        <Button fx:id="watchLaterButton" mnemonicParsing="false"
+                onAction="#onWatchLaterButtonClicked">
+            <graphic>
+                <Region styleClass="icon,time-icon"/>
+            </graphic>
+        </Button>
         <Button fx:id="watchButton" mnemonicParsing="false" styleClass="primary-button"
                 onAction="#onWatchButtonClicked" >
             <graphic>

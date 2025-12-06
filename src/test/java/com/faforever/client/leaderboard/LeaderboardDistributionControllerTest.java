@@ -48,7 +48,7 @@ public class LeaderboardDistributionControllerTest extends PlatformTest {
     lenient().when(playerService.getCurrentPlayer()).thenReturn(player);
     lenient().when(i18n.get(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-    loadFxml("theme/leaderboard/leaderboard_distribution.fxml", _ -> instance);
+    loadFxml("theme/leaderboard/leaderboard_distribution.fxml", param -> instance);
   }
 
   @Test
