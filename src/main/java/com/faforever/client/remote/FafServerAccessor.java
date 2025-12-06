@@ -211,7 +211,7 @@ public class FafServerAccessor implements InitializingBean, DisposableBean, Life
                       .filter(ConnectionStatus.DISCONNECTED::equals)
                       .next()
                       .take(Duration.ofSeconds(5))
-                      .then(connectAndLogIn()).doOnSubscribe(_ -> disconnect());
+                      .then(connectAndLogIn()).doOnSubscribe(unused -> disconnect());
   }
 
   public void addFriend(int playerId) {

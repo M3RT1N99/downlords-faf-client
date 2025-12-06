@@ -40,7 +40,7 @@ public class TaskService {
    * @param task the task to execute
    */
   public <T extends PrioritizedCompletableTask<?>> T submitTask(T task) {
-    task.getFuture().whenComplete((_, throwable) -> {
+    task.getFuture().whenComplete((unused, throwable) -> {
       fxApplicationThreadExecutor.execute(() -> activeTasks.remove(task));
       if (throwable != null) {
         log.error("Task failed", throwable);

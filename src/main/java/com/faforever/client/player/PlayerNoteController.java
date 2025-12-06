@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class PlayerNoteController extends NodeController<VBox> {
 
-  public static final int CHARACTER_LIMIT = 150;
+  public static final int CHARACTER_LIMIT = 1000;
 
   private final SocialService socialService;
 

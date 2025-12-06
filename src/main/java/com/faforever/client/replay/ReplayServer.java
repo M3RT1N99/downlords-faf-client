@@ -80,7 +80,7 @@ public class ReplayServer {
                       this.tcpServer = server;
                     })
                     .doOnUnbound(server -> log.debug("Closing local replay server on port {}", server.port()))
-                    .doOnConnection(_ -> log.debug("Connected to game replay data stream"))
+                    .doOnConnection(unused -> log.debug("Connected to game replay data stream"))
                     .handle((inbound, outbound) -> {
                       GameInfo game = gameService.getByUid(gameId).orElseThrow();
                       ByteArrayOutputStream replayData = new ByteArrayOutputStream();
