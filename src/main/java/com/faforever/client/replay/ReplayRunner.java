@@ -105,7 +105,7 @@ public class ReplayRunner implements InitializingBean {
         null) : modService.downloadAndEnableMods(simMods).toFuture();
     CompletableFuture<Void> downloadMapFuture = downloadMapAskIfError(mapFolderName).toFuture();
     CompletableFuture.allOf(updateFeaturedModFuture, installAndActivateSimModsFuture, downloadMapFuture)
-                     .thenApply(_ -> forgedAllianceLaunchService.startReplay(path, replayId))
+                     .thenApply(unused -> forgedAllianceLaunchService.startReplay(path, replayId))
                      .thenAcceptAsync(process::set, fxApplicationThreadExecutor);
   }
 
@@ -156,7 +156,7 @@ public class ReplayRunner implements InitializingBean {
         null) : modService.downloadAndEnableMods(simModUids).toFuture();
     CompletableFuture<Void> downloadMapFuture = downloadMapAskIfError(mapName).toFuture();
     CompletableFuture.allOf(updateFeaturedModFuture, installAndActivateSimModsFuture, downloadMapFuture)
-                     .thenApply(_ -> forgedAllianceLaunchService.startReplay(replayUrl, game.getId()))
+                     .thenApply(unused -> forgedAllianceLaunchService.startReplay(replayUrl, game.getId()))
                      .thenApplyAsync(process -> {
                        this.process.set(process);
                        return process;
@@ -170,7 +170,7 @@ public class ReplayRunner implements InitializingBean {
                        return null;
                      })
                      .thenCompose(Process::onExit)
-                     .whenComplete((_, _) -> liveReplayProxyServer.stop());
+                     .whenComplete((aVoid, throwable) -> liveReplayProxyServer.stop());
   }
 
   public boolean isRunning() {

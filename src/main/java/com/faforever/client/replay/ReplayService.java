@@ -186,7 +186,7 @@ public class ReplayService {
                                                                .toList();
 
       return Mono.fromFuture(CompletableFuture.allOf(replayFutures.toArray(new CompletableFuture[0]))
-                                              .thenApply(_ -> replayFutures.stream()
+                                                .thenApply(unused -> replayFutures.stream()
                                                                            .map(CompletableFuture::join)
                                                                            .filter(Objects::nonNull)
                                                                            .collect(Collectors.toList())))
@@ -209,7 +209,7 @@ public class ReplayService {
       CompletableFuture<MapVersion> mapVersionFuture = mapService.findByMapFolderName(replayMetadata.getMapname())
                                                                  .toFuture();
 
-      return CompletableFuture.allOf(featuredModFuture, mapVersionFuture).thenApply(_ -> {
+      return CompletableFuture.allOf(featuredModFuture, mapVersionFuture).thenApply(unused -> {
         MapVersion mapVersion = mapVersionFuture.join();
         FeaturedMod featuredMod = featuredModFuture.join();
         if (mapVersion == null) {

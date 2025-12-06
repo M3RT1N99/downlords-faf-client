@@ -243,13 +243,15 @@ public class ChatMessageController extends NodeController<VBox> {
   }
 
   private Node convertWordToNode(String word) {
-    return switch (word) {
-      case String url when PlatformService.LENIENT_URL_REGEX_PATTERN.matcher(url).matches() ->
-          createExternalHyperlink(url);
-      case String channel when channel.startsWith("#") -> createChannelLink(channel);
-      case String shortcode when emoticonService.isEmoticonShortcode(shortcode) -> createEmoticon(shortcode);
-      default -> new Text(word + " ");
-    };
+    if (PlatformService.LENIENT_URL_REGEX_PATTERN.matcher(word).matches()) {
+      return createExternalHyperlink(word);
+    } else if (word.startsWith("#")) {
+      return createChannelLink(word);
+    } else if (emoticonService.isEmoticonShortcode(word)) {
+      return createEmoticon(word);
+    } else {
+      return new Text(word + " ");
+    }
   }
 
   private Pane createEmoticon(String shortcode) {
@@ -281,10 +283,11 @@ public class ChatMessageController extends NodeController<VBox> {
   }
 
   private void styleMessageNode(Node node) {
-    switch (node) {
-      case ImageView _, Hyperlink _ -> {}
-      case Text text when mentionPattern.matcher(text.getText()).matches() -> text.setStyle("-fx-fill: #FFA500");
-      default -> node.styleProperty().bind(inlineTextColorStyleProperty);
+    if (node instanceof ImageView || node instanceof Hyperlink) {
+    } else if (node instanceof Text text && mentionPattern.matcher(text.getText()).matches()) {
+      text.setStyle("-fx-fill: #FFA500");
+    } else {
+      node.styleProperty().bind(inlineTextColorStyleProperty);
     }
   }
 

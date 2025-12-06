@@ -46,7 +46,7 @@ public class ChatMessage {
 
   public void addReaction(Reaction reaction) {
     reactions.computeIfAbsent(reaction.emoticon(),
-                              _ -> FXCollections.synchronizedObservableMap(FXCollections.observableHashMap()))
+                              unused -> FXCollections.synchronizedObservableMap(FXCollections.observableHashMap()))
              .put(reaction.reactorName(), reaction.messageId());
   }
 

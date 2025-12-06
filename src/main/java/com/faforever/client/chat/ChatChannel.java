@@ -165,7 +165,7 @@ public class ChatChannel {
 
   public void removePendingMessage(String messageId) {
     messagesById.computeIfPresent(messageId,
-                                  (_, chatMessage) -> chatMessage.getType() == Type.PENDING ? null : chatMessage);
+                                  (unused, chatMessage) -> chatMessage.getType() == Type.PENDING ? null : chatMessage);
   }
 
   public void addMessage(ChatMessage message) {

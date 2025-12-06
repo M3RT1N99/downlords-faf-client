@@ -158,7 +158,7 @@ public class TeamMatchmakingMapTileController extends NodeController<Pane> {
     minusButton.visibleProperty().bind(vetoesBox.hoverProperty().and(tokenCount.greaterThan(0)));
     minusButton.managedProperty().bind(minusButton.visibleProperty());
 
-    root.setOnMouseClicked(_ -> {
+    root.setOnMouseClicked(unused -> {
       if (onTileClickedListener != null && assignment.getValue() != null && !isGeneratedMap.getValue() && !vetoModeEnabled.get()) {
         onTileClickedListener.accept(assignment.getValue().mapVersion());
       }
@@ -189,8 +189,8 @@ public class TeamMatchmakingMapTileController extends NodeController<Pane> {
       event.consume();
     });
 
-    tokenCount.when(showing).subscribe(_ -> updateBannedState());
-    maxPerMap.when(showing).subscribe(_ -> updateBannedState());
+    tokenCount.when(showing).subscribe(unused -> updateBannedState());
+    maxPerMap.when(showing).subscribe(unused -> updateBannedState());
     vetoTokensMax.when(showing).subscribe(this::updateVetoes);
   }
 

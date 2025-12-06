@@ -383,23 +383,18 @@ public class GenerateMapController extends NodeController<Pane> {
   }
 
   private void handleGenerationException(Throwable e) {
-    switch (e) {
-      case InvalidParameterException _ -> {
-        log.error("Map generation failed due to invalid parameter", e);
-        notificationService.addImmediateErrorNotification(e, "mapGenerator.invalidName");
-      }
-      case UnsupportedVersionException _ -> {
-        log.warn("Map generation failed due to unsupported version", e);
-        notificationService.addImmediateWarnNotification("mapGenerator.tooNewVersion");
-      }
-      case OutdatedVersionException _ -> {
-        log.warn("Map generation failed due to outdated version", e);
-        notificationService.addImmediateWarnNotification("mapGenerator.tooOldVersion");
-      }
-      case null, default -> {
-        log.error("Map generation failed", e);
-        notificationService.addImmediateErrorNotification(e, "mapGenerator.generationFailed");
-      }
+    if (e instanceof InvalidParameterException) {
+      log.error("Map generation failed due to invalid parameter", e);
+      notificationService.addImmediateErrorNotification(e, "mapGenerator.invalidName");
+    } else if (e instanceof UnsupportedVersionException) {
+      log.warn("Map generation failed due to unsupported version", e);
+      notificationService.addImmediateWarnNotification("mapGenerator.tooNewVersion");
+    } else if (e instanceof OutdatedVersionException) {
+      log.warn("Map generation failed due to outdated version", e);
+      notificationService.addImmediateWarnNotification("mapGenerator.tooOldVersion");
+    } else {
+      log.error("Map generation failed", e);
+      notificationService.addImmediateErrorNotification(e, "mapGenerator.generationFailed");
     }
   }
 
