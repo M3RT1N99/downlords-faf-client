@@ -92,7 +92,7 @@ public class StatusBarController extends NodeController<Node> {
       }
     }));
 
-    JavaFxUtil.addListener(taskService.getActiveWorkers(), (Observable _) -> {
+    JavaFxUtil.addListener(taskService.getActiveWorkers(), (Observable unused) -> {
       Collection<Worker<?>> runningWorkers = taskService.getActiveWorkers();
       if (runningWorkers.isEmpty()) {
         setCurrentWorkerInStatusBar(null);

@@ -44,8 +44,7 @@ public class SvgImageLoader extends ImageLoaderImpl {
   }
 
   @Override
-  public ImageFrame load(int imageIndex, double width, double height, boolean preserveAspectRatio, boolean smooth,
-                         float screenPixelScale, float imagePixelScale) throws IOException {
+  public ImageFrame load(int imageIndex, int width, int height, boolean preserveAspectRatio, boolean smooth) throws IOException {
     if (0 != imageIndex) {
       return null;
     }

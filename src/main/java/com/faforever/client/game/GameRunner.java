@@ -150,7 +150,7 @@ public class GameRunner implements InitializingBean {
 
     fafServerAccessor.getEvents(NoticeInfo.class)
                      .filter(notice -> Objects.equals(notice.getStyle(), "kill"))
-                     .doOnNext(_ -> {
+                     .doOnNext(unused -> {
                        log.info("Game close requested by server");
                        String linksRules = clientProperties.getLinks().get("linksRules");
                        ImmediateNotification notification = new ImmediateNotification(i18n.get("game.kicked.title"),
@@ -191,10 +191,10 @@ public class GameRunner implements InitializingBean {
     CompletableFuture<Integer> runIceAdapterFuture = taskService.submitFutureTask("iceAdapter.connecting", () -> startIceAdapter(uid));
 
     return CompletableFuture.allOf(downloadMapFuture, loadLeagueInfoFuture, runReplayServerFuture, runIceAdapterFuture)
-                            .thenApply(_ -> gameMapper.map(gameLaunchResponse, loadLeagueInfoFuture.join()))
+                            .thenApply(unused -> gameMapper.map(gameLaunchResponse, loadLeagueInfoFuture.join()))
                             .thenApply(parameters -> launchOnlineGame(parameters, runIceAdapterFuture.join(),
                                                                       runReplayServerFuture.join()))
-                            .whenCompleteAsync((process, _) -> {
+                            .whenCompleteAsync((process, throwable) -> {
                               if (process != null) {
                                 this.process.set(process);
                                 runningGameId.set(uid);
@@ -202,12 +202,12 @@ public class GameRunner implements InitializingBean {
                             }, fxApplicationThreadExecutor)
                             .thenCompose(Process::onExit)
                             .thenAccept(this::handleTermination)
-                            .whenComplete((_, _) -> {
+                            .whenComplete((aVoid, throwable) -> {
                               iceAdapter.stop();
                               replayServer.stop();
                               fafServerAccessor.notifyGameEnded();
                             })
-                            .whenCompleteAsync((_, _) -> {
+                            .whenCompleteAsync((aVoid, throwable) -> {
                               process.set(null);
                               runningGameId.set(null);
                             }, fxApplicationThreadExecutor);
@@ -225,7 +225,7 @@ public class GameRunner implements InitializingBean {
     CompletableFuture<Void> downloadMapFuture = mapFolderName == null || mapFolderName.isBlank() ? completedFuture(
         null) : mapService.downloadIfNecessary(mapFolderName).toFuture();
     return CompletableFuture.allOf(updateFeaturedModFuture, installSimModsFuture, downloadMapFuture)
-                            .thenCompose(_ -> gameLaunchSupplier.get())
+                            .thenCompose(unused -> gameLaunchSupplier.get())
                             .thenCompose(this::startOnlineGame);
   }
 
@@ -350,7 +350,7 @@ public class GameRunner implements InitializingBean {
     matchmakerFuture = prepareAndLaunchGameWhenReady(FAF.getTechnicalName(), Set.of(), null,
                                                      fafServerAccessor::startSearchMatchmaker);
 
-    matchmakerFuture.whenComplete((_, throwable) -> {
+    matchmakerFuture.whenComplete((aVoid, throwable) -> {
       if (throwable != null) {
         throwable = ConcurrentUtil.unwrapIfCompletionException(throwable);
         if (throwable instanceof CancellationException) {
@@ -485,7 +485,7 @@ public class GameRunner implements InitializingBean {
         infoIcon.getStyleClass().add("info-icon");
         final Button showAnalysisBtn = new Button(i18n.get("game.log.analysis.solutionBtn"), infoIcon);
         showAnalysisBtn.setDefaultButton(true);
-        showAnalysisBtn.setOnAction(_ -> notificationService.addNotification(
+        showAnalysisBtn.setOnAction(unused -> notificationService.addNotification(
             new ImmediateNotification(i18n.get("game.log.analysis"), message.toString(), WARN, actions)));
 
         return showAnalysisBtn;
@@ -511,7 +511,7 @@ public class GameRunner implements InitializingBean {
     }
 
     if (!preferencesService.hasValidGamePath()) {
-      gamePathHandler.chooseAndValidateGameDirectory().thenAccept(_ -> launchTutorial(mapVersion, technicalMapName));
+      gamePathHandler.chooseAndValidateGameDirectory().thenAccept(unused -> launchTutorial(mapVersion, technicalMapName));
       return;
     }
 
@@ -521,8 +521,8 @@ public class GameRunner implements InitializingBean {
         TUTORIALS.getTechnicalName(), false);
 
     CompletableFuture.allOf(updateTutorialFuture, downloadMapFuture)
-                     .thenApply(_ -> forgedAllianceLaunchService.launchOfflineGame(technicalMapName))
-                     .whenCompleteAsync((process, _) -> {
+                     .thenApply(unused -> forgedAllianceLaunchService.launchOfflineGame(technicalMapName))
+                     .whenCompleteAsync((process, throwable) -> {
                        if (process != null) {
                          this.process.set(process);
                        }
@@ -549,12 +549,12 @@ public class GameRunner implements InitializingBean {
     }
 
     if (!preferencesService.hasValidGamePath()) {
-      gamePathHandler.chooseAndValidateGameDirectory().thenAccept(_ -> startOffline());
+      gamePathHandler.chooseAndValidateGameDirectory().thenAccept(unused -> startOffline());
       return;
     }
 
     CompletableFuture.supplyAsync(() -> forgedAllianceLaunchService.launchOfflineGame(null))
-                     .whenCompleteAsync((process, _) -> {
+                     .whenCompleteAsync((process, throwable) -> {
                        if (process != null) {
                          this.process.set(process);
                        }

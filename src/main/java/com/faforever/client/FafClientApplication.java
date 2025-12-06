@@ -111,7 +111,7 @@ public class FafClientApplication extends Application {
       log.info("Starting non-daemon detector thread");
       try {
         Thread.sleep(Duration.ofSeconds(10).toMillis());
-      } catch (InterruptedException _) {
+      } catch (InterruptedException ignored) {
       }
 
       Set<Entry<Thread, StackTraceElement[]>> threads = Thread.getAllStackTraces().entrySet();
@@ -131,7 +131,7 @@ public class FafClientApplication extends Application {
 
       try {
         Thread.sleep(Duration.ofSeconds(1).toMillis());
-      } catch (InterruptedException _) {
+      } catch (InterruptedException ignored) {
       }
 
       System.exit(-1);

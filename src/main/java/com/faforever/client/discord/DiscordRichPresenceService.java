@@ -70,9 +70,9 @@ public class DiscordRichPresenceService implements DisposableBean, InitializingB
 
     // This need to be change and not invalidation listeners but not quite sure why since they don't get triggered more than
     // once as invalidation listeners
-    gameRunner.runningGameProperty().flatMap(GameInfo::statusProperty).subscribe(_ -> updatePlayedGame());
+    gameRunner.runningGameProperty().flatMap(GameInfo::statusProperty).subscribe(unused -> updatePlayedGame());
     gameRunner.runningGameProperty()
-              .flatMap(GameInfo::allPlayersInGameProperty).subscribe(_ -> updatePlayedGame());
+              .flatMap(GameInfo::allPlayersInGameProperty).subscribe(unused -> updatePlayedGame());
   }
 
   private void updatePlayedGame() {

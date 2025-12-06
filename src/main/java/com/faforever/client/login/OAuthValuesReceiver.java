@@ -67,7 +67,7 @@ public class OAuthValuesReceiver {
     return CompletableFuture.runAsync(() -> {
       try {
         redirectUriLatch.await();
-      } catch (InterruptedException _) {}
+      } catch (InterruptedException ignored) {}
       platformService.showDocument(loginService.getHydraUrl(this.state, this.codeVerifier, redirectUri));
     });
   }

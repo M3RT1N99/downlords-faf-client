@@ -17,8 +17,8 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 idea {
@@ -55,6 +55,7 @@ if (javafxPlatform == "unspecified") {
     }
 }
 println "Platform is: ${javafxPlatform}"
+
 
 compileJava.dependsOn(processResources)
 processResources {
@@ -233,7 +234,7 @@ repositories {
 }
 
 javafx {
-    version = "25"
+    version = "21"
     modules = [
             "javafx.base", "javafx.controls", "javafx.graphics", "javafx.swing", "javafx.fxml", "javafx.web", "javafx.media"
     ]
