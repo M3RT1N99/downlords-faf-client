@@ -9,6 +9,7 @@ import com.faforever.client.fx.NodeController;
 import com.faforever.client.headerbar.HeaderBarController;
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.login.LoginController;
+import com.faforever.client.tournament.TournamentService;
 import com.faforever.client.main.event.NavigateEvent;
 import com.faforever.client.main.event.NavigationItem;
 import com.faforever.client.navigation.NavigationHandler;
@@ -69,6 +70,7 @@ public class MainController extends NodeController<Node> implements Initializing
   private final FxApplicationThreadExecutor fxApplicationThreadExecutor;
   private final TrayIconManager trayIconManager;
   private final NavigationHandler navigationHandler;
+  private final TournamentService tournamentService;
 
   public Pane contentPane;
   public StackPane contentWrapperPane;
@@ -233,6 +235,7 @@ public class MainController extends NodeController<Node> implements Initializing
       fxStage.setTitleBar(headerBar);
 
       openStartTab();
+      tournamentService.checkForUpcomingTournaments();
     });
   }
 

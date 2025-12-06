@@ -33,7 +33,6 @@ import com.faforever.client.util.ConcurrentUtil;
 import com.faforever.client.util.PopupUtil;
 import com.faforever.commons.lobby.GameVisibility;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Strings;
 import javafx.beans.WeakInvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -298,7 +297,7 @@ public class CreateGameController extends NodeController<Pane> {
                                    .when(showing));
     mapPlayersLabel.textProperty().bind(selectedMap.map(MapVersion::maxPlayers).map(i18n::number).when(showing));
     mapDescriptionLabel.textProperty().bind(selectedMap.map(MapVersion::description)
-                                        .map(Strings::emptyToNull)
+                                        .map(StringUtils::trimToNull)
                                         .map(FaStrings::removeLocalizationTag)
                                         .orElse(i18n.get("map.noDescriptionAvailable"))
                                         .when(showing));
@@ -391,7 +390,7 @@ public class CreateGameController extends NodeController<Pane> {
   }
 
   private void setLastGameTitle() {
-    titleTextField.setText(Strings.nullToEmpty(lastGamePrefs.getLastGameTitle()));
+    titleTextField.setText(StringUtils.defaultString(lastGamePrefs.getLastGameTitle()));
   }
 
   private void selectLastOrDefaultGameType() {
@@ -517,7 +516,7 @@ public class CreateGameController extends NodeController<Pane> {
 
     String featuredModName = featuredModListView.getSelectionModel().getSelectedItem().technicalName();
     NewGameInfo newGameInfo = new NewGameInfo(titleTextField.getText().trim(),
-                                              Strings.emptyToNull(passwordTextField.getText()), featuredModName,
+                                              StringUtils.trimToNull(passwordTextField.getText()), featuredModName,
                                               mapVersion.folderName(), getUUIDsFromModVersions(mods),
                                               onlyForFriendsCheckBox.isSelected() ? GameVisibility.PRIVATE : GameVisibility.PUBLIC,
                                               minRating, maxRating, enforceRating);
