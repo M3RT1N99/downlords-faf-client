@@ -14,6 +14,7 @@ import com.faforever.client.fx.NodeController;
 import com.faforever.client.fx.PlatformService;
 import com.faforever.client.i18n.I18n;
 import com.faforever.client.player.CountryFlagService;
+import com.faforever.client.preferences.ChatPrefs;
 import com.faforever.client.theme.UiService;
 import com.faforever.client.util.PopupUtil;
 import com.faforever.client.util.TimeService;
@@ -79,6 +80,8 @@ public class ChatMessageController extends NodeController<VBox> {
   private final ImageViewHelper imageViewHelper;
   private final I18n i18n;
   private final FxApplicationThreadExecutor fxApplicationThreadExecutor;
+  private final ChatPrefs chatPrefs;
+  private final UrlPreviewResolver urlPreviewResolver;
 
   public VBox root;
   public HBox detailsContainer;
@@ -91,6 +94,7 @@ public class ChatMessageController extends NodeController<VBox> {
   public HBox messageActionsContainer;
   public Button reactButton;
   public Button replyButton;
+  public VBox previewContainer;
   public FlowPane reactionsContainer;
   public HBox replyContainer;
   public Label replyAuthorLabel;
@@ -111,7 +115,7 @@ public class ChatMessageController extends NodeController<VBox> {
 
   @Override
   protected void onInitialize() {
-    JavaFxUtil.bindManagedToVisible(detailsContainer, replyContainer, message);
+    JavaFxUtil.bindManagedToVisible(detailsContainer, replyContainer, message, previewContainer);
 
     mentionPattern = chatService.getMentionPattern();
 
@@ -279,7 +283,44 @@ public class ChatMessageController extends NodeController<VBox> {
         platformService.showDocument(url);
       }
     });
+
+    if (chatPrefs.isPreviewImageUrls()) {
+      urlPreviewResolver.resolvePreview(url).thenAcceptAsync(preview -> preview.ifPresent(previewData -> {
+        Node previewNode = createPreviewNode(previewData);
+        previewContainer.getChildren().add(previewNode);
+      }), fxApplicationThreadExecutor);
+    }
+
     return hyperlink;
+  }
+
+  private Node createPreviewNode(UrlPreviewResolver.PreviewData previewData) {
+    VBox previewBox = new VBox(5);
+    previewBox.setPadding(new Insets(5));
+    previewBox.setStyle("-fx-background-color: -fx-box-background; -fx-background-radius: 5;");
+
+    if (previewData.title() != null) {
+      Label titleLabel = new Label(previewData.title());
+      titleLabel.setStyle("-fx-font-weight: bold;");
+      titleLabel.setWrapText(true);
+      previewBox.getChildren().add(titleLabel);
+    }
+
+    if (previewData.description() != null) {
+      Label descriptionLabel = new Label(previewData.description());
+      descriptionLabel.setWrapText(true);
+      previewBox.getChildren().add(descriptionLabel);
+    }
+
+    if (previewData.imageUrl() != null) {
+      ImageView imageView = new ImageView();
+      imageView.setPreserveRatio(true);
+      imageView.setFitWidth(300);
+      imageView.setImage(new javafx.scene.image.Image(previewData.imageUrl(), 300, 0, true, true));
+      previewBox.getChildren().add(imageView);
+    }
+
+    return previewBox;
   }
 
   private void styleMessageNode(Node node) {

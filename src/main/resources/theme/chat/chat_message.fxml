@@ -49,6 +49,11 @@
             </Button>
         </HBox>
     </HBox>
+    <VBox fx:id="previewContainer" spacing="5">
+        <padding>
+            <Insets left="75"/>
+        </padding>
+    </VBox>
     <FlowPane fx:id="reactionsContainer" visible="false" hgap="5">
         <padding>
             <Insets left="75"/>

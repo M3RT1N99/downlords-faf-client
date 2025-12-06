@@ -1,13 +1,11 @@
 package com.faforever.client.chat;
 
-import javafx.scene.Node;
-
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public interface UrlPreviewResolver {
 
-  CompletableFuture<Optional<Preview>> resolvePreview(String urlString);
+  CompletableFuture<Optional<PreviewData>> resolvePreview(String urlString);
 
-  record Preview(Node node, String description) {}
+  record PreviewData(String imageUrl, String title, String description) {}
 }
